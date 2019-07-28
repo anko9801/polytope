@@ -152,6 +152,73 @@ float[][] poly5_cube = {
   {1,1,1,1,1},
 };
 
+float[][] poly6_cube = {
+  {-1,-1,-1,-1,-1,-1},
+  {-1,-1,-1,1,-1,-1},
+  {-1,-1,1,-1,-1,-1},
+  {-1,1,-1,-1,-1,-1},
+  {1,-1,-1,-1,-1,-1},
+  {-1,-1,1,1,-1,-1},
+  {-1,1,-1,1,-1,-1},
+  {1,-1,-1,1,-1,-1},
+  {-1,1,1,-1,-1,-1},
+  {1,-1,1,-1,-1,-1},
+  {1,1,-1,-1,-1,-1},
+  {-1,1,1,1,-1,-1},
+  {1,-1,1,1,-1,-1},
+  {1,1,-1,1,-1,-1},
+  {1,1,1,-1,-1,-1},
+  {1,1,1,1,-1,-1},
+  {-1,-1,-1,-1,1,-1},
+  {-1,-1,-1,1,1,-1},
+  {-1,-1,1,-1,1,-1},
+  {-1,1,-1,-1,1,-1},
+  {1,-1,-1,-1,1,-1},
+  {-1,-1,1,1,1,-1},
+  {-1,1,-1,1,1,-1},
+  {1,-1,-1,1,1,-1},
+  {-1,1,1,-1,1,-1},
+  {1,-1,1,-1,1,-1},
+  {1,1,-1,-1,1,-1},
+  {-1,1,1,1,1,-1},
+  {1,-1,1,1,1,-1},
+  {1,1,-1,1,1,-1},
+  {1,1,1,-1,1,-1},
+  {1,1,1,1,1,-1},
+  {-1,-1,-1,-1,-1,1},
+  {-1,-1,-1,1,-1,1},
+  {-1,-1,1,-1,-1,1},
+  {-1,1,-1,-1,-1,1},
+  {1,-1,-1,-1,-1,1},
+  {-1,-1,1,1,-1,1},
+  {-1,1,-1,1,-1,1},
+  {1,-1,-1,1,-1,1},
+  {-1,1,1,-1,-1,1},
+  {1,-1,1,-1,-1,1},
+  {1,1,-1,-1,-1,1},
+  {-1,1,1,1,-1,1},
+  {1,-1,1,1,-1,1},
+  {1,1,-1,1,-1,1},
+  {1,1,1,-1,-1,1},
+  {1,1,1,1,-1,1},
+  {-1,-1,-1,-1,1,1},
+  {-1,-1,-1,1,1,1},
+  {-1,-1,1,-1,1,1},
+  {-1,1,-1,-1,1,1},
+  {1,-1,-1,-1,1,1},
+  {-1,-1,1,1,1,1},
+  {-1,1,-1,1,1,1},
+  {1,-1,-1,1,1,1},
+  {-1,1,1,-1,1,1},
+  {1,-1,1,-1,1,1},
+  {1,1,-1,-1,1,1},
+  {-1,1,1,1,1,1},
+  {1,-1,1,1,1,1},
+  {1,1,-1,1,1,1},
+  {1,1,1,-1,1,1},
+  {1,1,1,1,1,1},
+};
+
 
 void setup() {
   size(500, 500, P3D);
@@ -173,17 +240,28 @@ void draw() {
   //  rotationXY(point, 1);
   //}
   
-  //draw_poly(poly8, poly8_sides, 100);
-  //for (float[] point: poly8){
-  //  rotationZW(point, 1);
-  //  rotationXY(point, 1);
-  //}
-  
-  draw_poly(poly16, poly16_sides, 200);
-  for (float[] point: poly16){
+  draw_poly(poly8, poly8_sides, 100);
+  //draw_N(poly8, 100);
+  for (float[] point: poly8){
     rotationZW(point, 1);
     rotationXY(point, 1);
   }
+  
+  //draw_N(poly5_cube, 10);
+  //for (float[] point: poly5_cube){
+  //  rotationXYZ(point, 1);
+  //}
+  
+  //draw_N(poly6_cube, 5);
+  //for (float[] point: poly6_cube){
+  //  rotationXYZW(point, 1);
+  //}
+  
+  //draw_poly(poly16, poly16_sides, 200);
+  //for (float[] point: poly16){
+  //  rotationZW(point, 1);
+  //  rotationXY(point, 1);
+  //}
 }
 
 void draw_poly(float[][] poly, int[][] sides, int size){
@@ -197,15 +275,28 @@ void draw_poly(float[][] poly, int[][] sides, int size){
   strokeWeight(10);
   for (float[] point: poly){
     float w = size / (2.0 - point[3]);
+    System.out.println(w +" "+ point[3]);
     point(-w*point[0], -w*point[1], -w*point[2]);
   }
 }
 
-void draw_cube(float[][] poly, int size){
+void draw_N(float[][] poly, int size){
   strokeWeight(10);
+  float[] kari = {0,0,0,0,0,0,0,0,0};
   for (float[] point: poly) {
-    float w = size / (2.0 - point[3]);
-    point(-w*point[0], -w*point[1], -w*point[2]);
+    for (int i = 0;i < point.length;i++) {
+      kari[i] = point[i];
+    }
+    for (int i = point.length-1;i >= 0;i--) {
+      if (i < 3) {
+        point(kari[0], kari[1], kari[2]);
+        break;
+      }
+      float w = size / (2.0 - point[i]);
+      for (int j = 0;j < i;j++) {
+        kari[j] *= w;
+      }
+    }
   }
 }
 
@@ -219,12 +310,33 @@ float[] rotationXY(float[] point, int deg) {
   return matrix_product(point, rotXY);
 }
 
+float[] rotationXYZ(float[] point, int deg) {
+  float[][] rotXY = {
+    {1,0,0,0,0},
+    {0,1,0,0,0},
+    {0,0,cos(radians(deg)),0,-sin(radians(deg))},
+    {0,0,0,1,0},
+    {0,0,sin(radians(deg)),0,cos(radians(deg))}};
+  return matrix_product(point, rotXY);
+}
+
+float[] rotationXYZW(float[] point, int deg) {
+  float[][] rotXY = {
+    {1,0,0,0,0,0},
+    {0,1,0,0,0,0},
+    {0,0,cos(radians(deg)),0,0,-sin(radians(deg))},
+    {0,0,0,1,0,0},
+    {0,0,0,0,1,0},
+    {0,0,sin(radians(deg)),0,0,cos(radians(deg))}};
+  return matrix_product(point, rotXY);
+}
+
 float[] rotationYZ(float[] point, int deg) {
   float[][] rotYZ = {
-    {cos(radians(deg)),0,0,sin(radians(deg))},
+    {cos(radians(deg)),0,0,-sin(radians(deg))},
     {0,1,0,0},
     {0,0,1,0},
-    {-sin(radians(deg)),0,0,cos(radians(deg))}};
+    {sin(radians(deg)),0,0,cos(radians(deg))}};
   degYZ = (degYZ + deg) % 360;
   return matrix_product(point, rotYZ);
 }
@@ -260,15 +372,15 @@ float[] rotationZW(float[] point, int deg) {
 }
 
 float[] matrix_product(float[] point, float[][] rotT) {
-  float[] ans = {0,0,0,0};
+  float[] ans = {0,0,0,0,0,0,0,0,0,0};
   int i = 0;
   for (float[] rot: rotT) {
-    for (int x = 0; x < 4; x++) {
+    for (int x = 0; x < point.length; x++) {
       ans[i] += point[x]*rot[x];
     }
     i++;
   }
-  for (int t = 0;t < 4;t++){
+  for (int t = 0;t < point.length;t++){
     point[t] = ans[t];
   }
   return point;
@@ -309,36 +421,4 @@ void texts() {
   text("camX  " + camX, 0, 40);
   text("camY  " + camY, 0, 50);
   text("camZ  " + camZ, 0, 60);
-}
-
-class P4DVector {
-  float x,y,z,w;
-  
-  P4DVector(float x, float y, float z, float w) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    this.w = w;
-  }
-  
-  void connect(P4DVector a, P4DVector b) {
-    strokeWeight(1);
-    line(-10*a.x, -10*a.y, -10*a.z,
-         -10*b.x, -10*b.y, -10*b.z);
-  }
-  
-  float[] matrix_product(float[] point, float[][] rotT) {
-    float[] ans = {0,0,0,0};
-    int i = 0;
-    for (float[] rot: rotT) {
-      for (int x = 0; x < 4; x++) {
-        ans[i] += point[x]*rot[x];
-      }
-      i++;
-    }
-    for (int t = 0;t < 4;t++){
-      point[t] = ans[t];
-    }
-    return point;
-  }
 }
